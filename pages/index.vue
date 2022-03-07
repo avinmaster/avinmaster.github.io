@@ -102,7 +102,6 @@ export default {
         navigation: true,
         navigationPosition: 'left',
         navigationTooltips: ['Intro', 'My Work', 'About me'],
-        scrollOverflow: true,
 
         responsiveWidth: 900,
         responsiveHeight: 600,
