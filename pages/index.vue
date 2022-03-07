@@ -45,37 +45,39 @@
       >Email</a>
     </div>
 
-    <full-page id="main" :options="options">
-      <div class="section section-1 start active fp-auto-height-responsive">
-        <h1 class="fadeIn wow" data-wow-duration="1.4s">
-          Hello! My name is<br>
-          <span class="fadeIn wow" data-wow-duration="1.4s">Odilov Oybek.</span>
-        </h1>
-        <p class="fadeIn wow" data-wow-duration="2.1s">
-          - a fullstack web-engineer.
-        </p>
-      </div>
-
-      <div class="section section-2 project">
-        <div class="arrows">
-          <button id="left-arrow">
-            ←
-          </button>
-          <button id="right-arrow">
-            →
-          </button>
+    <no-ssr>
+      <full-page id="main" :options="options">
+        <div class="section section-1 start active fp-auto-height-responsive">
+          <h1 class="fadeIn wow" data-wow-duration="1.4s">
+            Hello! My name is<br>
+            <span class="fadeIn wow" data-wow-duration="1.4s">Odilov Oybek.</span>
+          </h1>
+          <p class="fadeIn wow" data-wow-duration="2.1s">
+            - a fullstack web-engineer.
+          </p>
         </div>
-        <div id="slide-1" class="slide active" />
-      </div>
 
-      <div class="section section-3">
-        <h1>About life of a web developer...</h1>
-        <p>
-          I'm a web programmer, <span>UX/UI</span> designer and backend/frontend developer.
-        </p>
-        <a href="#" class="btn">Read More!</a>
-      </div>
-    </full-page>
+        <div class="section section-2 project">
+          <div class="arrows">
+            <button id="left-arrow">
+              ←
+            </button>
+            <button id="right-arrow">
+              →
+            </button>
+          </div>
+          <div id="slide-1" class="slide active" />
+        </div>
+
+        <div class="section section-3">
+          <h1>About life of a web developer...</h1>
+          <p>
+            I'm a web programmer, <span>UX/UI</span> designer and backend/frontend developer.
+          </p>
+          <a href="#" class="btn">Read More!</a>
+        </div>
+      </full-page>
+    </no-ssr>
   </div>
 </template>
 
