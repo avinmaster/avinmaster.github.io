@@ -45,7 +45,7 @@
       >Email</a>
     </div>
 
-    <no-ssr>
+    <client-only>
       <full-page id="main" :options="options">
         <div class="section section-1 start active fp-auto-height-responsive">
           <h1 class="fadeIn wow" data-wow-duration="1.4s">
@@ -77,7 +77,7 @@
           <a href="#" class="btn">Read More!</a>
         </div>
       </full-page>
-    </no-ssr>
+    </client-only>
   </div>
 </template>
 
