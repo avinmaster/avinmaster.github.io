@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- <nuxt-content :document="doc" /> -->
-    <div id="bottom-nav" class="nav" :class="{ 'hide': navHide, 'compact': navCompact }">
+    <div id="bottom-nav" class="nav" :class="{ 'hide': navHide }">
       <div class="menu fadeIn wow" data-wow-delay=".5s" data-wow-duration=".5s">
         <a href="#" class="portfolio-lnk">My work</a>
         <a href="#" class="about-lnk">About me</a>
@@ -14,11 +14,11 @@
       >
         <a href="">FAQ</a>
         <a href="">Contact</a>
-        <a href="">En <span class="pe-7s-angle-down" /></a>
+        <a href="">En <span class="pe-7s-angle-down"/></a>
       </div>
     </div>
 
-    <div id="right-nav" class="nav" :class="{ 'hide': navHide, 'compact': navCompact }">
+    <div id="right-nav" class="nav" :class="{ 'hide': navHide }">
       <a
         href="https://github.com"
         class="fadeIn wow"
@@ -45,9 +45,11 @@
       >Email</a>
     </div>
 
-    <client-only>
-      <full-page id="main" ref="fullpage" :options="options">
-        <div class="section section-1 start active fp-auto-height-responsive">
+    <full-page id="main" ref="fullpage" :options="options">
+      <div class="section section-1 start active fp-auto-height-responsive">
+        <theme-switcher :is-dark="isDark" @toggle="toggleTheme" />
+        <div class="fp-bg" />
+        <div class="content">
           <h1 class="fadeIn wow" data-wow-duration="1.4s">
             Hello! My name is<br>
             <span class="fadeIn wow" data-wow-duration="1.4s">Odilov Oybek.</span>
@@ -56,36 +58,41 @@
             - a fullstack web-engineer.
           </p>
         </div>
+      </div>
 
-        <div class="section section-2 project">
-          <div class="arrows">
-            <button id="left-arrow">
-              ←
-            </button>
-            <button id="right-arrow">
-              →
-            </button>
-          </div>
-          <div id="slide-1" class="slide active">
-            <h1>Hello</h1>
-          </div>
+      <div class="section section-2 project">
+        <div class="arrows">
+          <button id="left-arrow">
+            ←
+          </button>
+          <button id="right-arrow">
+            →
+          </button>
         </div>
+        <div id="slide-1" class="slide active">
+          <h1>Hello</h1>
+        </div>
+      </div>
 
-        <div class="section section-3">
-          <h1>About life of a web developer...</h1>
-          <p>
-            I'm a web programmer, <span>UX/UI</span> designer and backend/frontend developer.
-          </p>
-          <a href="#" class="btn">Read More!</a>
-        </div>
-      </full-page>
-    </client-only>
+      <div class="section section-3">
+        <h1>About life of a web developer...</h1>
+        <p>
+          I'm a web programmer, <span>UX/UI</span> designer and backend/frontend developer.
+        </p>
+        <a href="#" class="btn">Read More!</a>
+      </div>
+    </full-page>
   </div>
 </template>
 
 <script>
+import ThemeSwitcher from '~/components/ThemeSwitcher.vue'
+
 export default {
   name: 'IndexPage',
+  components: {
+    ThemeSwitcher
+  },
   async asyncData ({
     $content,
     params
@@ -101,12 +108,6 @@ export default {
     return {
       options: {
         continuousHorizontal: true,
-        parallax: true,
-        parallaxOptions: {
-          type: 'reveal',
-          percentage: 62,
-          property: 'translate'
-        },
         licenseKey: '11111111-11111111-11111111-11111111',
         anchors: ['start', 'my-work', 'about-me'],
         navigation: true,
@@ -117,46 +118,117 @@ export default {
         responsiveHeight: 600,
 
         controlArrows: false,
-
         css3: true,
-
-        onLeave: this.onLeave
+        onLeave: this.onLeave,
+        afterResponsive: this.onResponsive
       },
       navHide: false,
-      navCompact: false,
-      scrollbarEnabled: false,
-      autoScrollDisabled: false
+      sectionsWithScroll: [2],
+      autoScrollDisabled: false,
+      isDark: false
+    }
+  },
+
+  computed: {
+    fullpageApi () {
+      return this.$refs.fullpage.api
+    }
+  },
+
+  watch: {
+    currentTheme (val) {
+      document.body.classList.toggle('dark', val)
     }
   },
 
   mounted () {
-    window.WOW = require('wow.js')
+    const initUserTheme = this.getTheme() || this.getMediaPreference()
+    this.setTheme(Boolean(Number(initUserTheme)))
 
-    new window.WOW().init()
+    const WOW = new (require('wow.js'))()
+
+    WOW?.init()
   },
 
   methods: {
-    scroll () {
-      const rect = document.querySelector('[data-anchor=about-me]').getBoundingClientRect().top
-      if (this.$refs.fullpage.api.getActiveSection().index === 2 && rect > 1) {
-        window.removeEventListener('scroll', this.scroll)
+    getTheme () {
+      return localStorage.getItem('dark-theme')
+    },
+    getMediaPreference () {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches
+    },
+    setTheme (isDark) {
+      this.isDark = isDark
+      localStorage.setItem('dark-theme', Number(isDark))
+      document.documentElement.className = isDark ? 'dark' : ''
+    },
+    toggleTheme () {
+      this.setTheme(!this.isDark)
+    },
+    onResponsive (val) {
+      if (!this.fullpageApi) {
+        return
+      }
+      const isScrollable = this.sectionsWithScroll.includes(this.fullpageApi.getActiveSection().index)
 
-        this.$refs.fullpage.api.setAutoScrolling(true)
-        this.$refs.fullpage.api.moveSectionUp()
-        this.$refs.fullpage.api.setFitToSection(true)
+      if (!val) {
+        if (isScrollable) {
+          this.disableAutoScrolling()
+        } else {
+          this.enableAutoScrolling()
+        }
+      } else if (isScrollable) {
+        this.disableAutoScrolling()
       }
     },
-    onLeave (origin, destination) {
-      if (destination.index === 2) {
-        setTimeout(() => {
-          this.$refs.fullpage.api.setAutoScrolling(false)
-          this.$refs.fullpage.api.setFitToSection(false)
-          window.addEventListener('scroll', this.scroll)
-        }, 700)
+    scroll () {
+      const rect = document.querySelector('[data-anchor=about-me]')?.getBoundingClientRect()?.top
+      if (!rect) {
+        return
       }
 
-      this.navHide = destination.index === 1
-      this.navCompact = destination.index !== 0
+      if (this.fullpageApi.getActiveSection().index === 2 && rect > 1 && this.autoScrollDisabled) {
+        this.enableAutoScrolling()
+        this.fullpageApi.moveSectionUp()
+      }
+    },
+    onLeave (orig, dest) {
+      const destIndex = dest.index
+      this.navHide = destIndex === 1
+      document.querySelector('#fp-nav')?.classList.toggle('hide', destIndex === 1)
+
+      if (document.body.offsetWidth < 900) {
+        return
+      }
+
+      if (destIndex === 2) {
+        setTimeout(this.disableAutoScrolling, 700)
+      } else {
+        this.enableAutoScrolling()
+      }
+    },
+    enableAutoScrolling () {
+      if (window.removeEventListener) {
+        window.removeEventListener('scroll', this.scroll)
+      } else {
+        window.detachEvent('onscroll', this.scroll)
+      }
+
+      window.removeEventListener('scroll', this.scroll)
+      this.fullpageApi.setAutoScrolling(true)
+      this.fullpageApi.setFitToSection(true)
+      this.autoScrollDisabled = false
+    },
+    disableAutoScrolling () {
+      if (window.addEventListener) {
+        window.addEventListener('scroll', this.scroll)
+      } else {
+        window.attachEvent('onscroll', this.scroll)
+      }
+
+      this.fullpageApi.setAutoScrolling(false)
+      this.fullpageApi.setFitToSection(false)
+      this.autoScrollDisabled = true
     }
   }
 }

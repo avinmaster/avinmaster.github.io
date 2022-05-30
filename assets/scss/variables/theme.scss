@@ -1,0 +1,19 @@
+:root {
+  --text-primary-color: #3c3f50;
+  --text-secondary-color: #c5aca2;
+  --bg-primary: #f2f3f5;
+  --bg-secondary: #2b2b2b;
+  --text-secondary-shadow-color: rgba(202, 183, 176, 0.3);
+  --text-primary-shadow-color: rgba(0, 0, 0, .2);
+  --mask-bg-color: none;
+}
+
+:root.dark {
+  --text-primary-color: #d4d4d4;
+  --text-secondary-color: #c19887;
+  --bg-primary: #2b2b2b;
+  --bg-secondary: #f2f3f5;
+  --text-secondary-shadow-color: rgba(0, 0, 0, .18);
+  --text-primary-shadow-color: rgba(202, 183, 176, 0.3);
+  --mask-bg-color: rgba(0, 0, 0, 0.81)
+}

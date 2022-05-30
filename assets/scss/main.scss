@@ -1,5 +1,6 @@
 @import "./imports/animate.css";
 @import "./imports/fullpage.css";
+@import "./variables/theme.scss";
 
 * {
   border: 0;
@@ -13,10 +14,11 @@
 
 body {
   font: 300 18px "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  color: #3C3F50;
+  color: var(--text-primary-color);
   text-size-adjust: initial;
   height: initial;
   scroll-behavior: unset;
+  transition: color .3s;
 }
 
 h1,
@@ -71,13 +73,21 @@ Navigations
 
 // Bottom Navigation - links to page sections
 
+.nav {
+  position: fixed;
+  z-index: 6;
+
+  a {
+    color: var(--text-primary-color);
+    transition: color .3s;
+  }
+}
+
 #bottom-nav {
   height: 116px;
   width: 100%;
   line-height: 116px;
-  position: fixed;
   bottom: 0;
-  z-index: 6;
   padding: 0 7% 0 6%;
   transition: bottom .9s;
 
@@ -87,7 +97,6 @@ Navigations
 
   a {
     margin: 0 20px;
-    color: #1a1a1a;
   }
 
   .menu {
@@ -120,8 +129,6 @@ Navigations
   top: 0;
   right: 0;
   line-height: 100px;
-  z-index: 6;
-  position: fixed;
   text-align: center;
   padding-top: calc((100vh - 480px) / 2);
   overflow: hidden;
@@ -135,7 +142,6 @@ Navigations
   a {
     display: inline-block;
     transform: rotate(90deg);
-    color: #1A1A1A;
     width: 70px;
   }
 }
@@ -146,8 +152,9 @@ Sections
 
 .section {
   min-height: 100vh;
-  background: #F2F3F5;
+  background: var(--bg-primary);
   padding-left: 6%;
+  transition: background .3s;
 }
 
 // Start section - first, intro section
@@ -156,18 +163,20 @@ Sections
   font: bolder 40px Georgia, "Times New Roman", Times, serif;
   text-align: center;
   // background: none !important;
-  background: #F2F3F5 url(../img/hero-bg-1.jpg) no-repeat center/cover fixed;
-  text-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  background: var(--bg-primary) url(../img/hero-bg-1.jpg) no-repeat left/cover fixed;
+  text-shadow: 0 0 10px var(--text-primary-shadow-color);
   display:flex;
   justify-content:center;
   align-items:center;
   flex-direction: column;
+  transition: opacity 1s, text-shadow .3s;
 
   h1 {
     font-size: 80px;
     span {
-      text-shadow: 0 0 10px rgba(202, 183, 176, 0.3);
-      color: #c5aca2;
+      text-shadow: 0 0 10px var(--text-secondary-shadow-color);
+      color: var(--text-secondary-color);
+      transition: color .3s, text-shadow .3s;
     }
   }
 }
@@ -251,7 +260,27 @@ Additions
 #fp-nav {
   transition: left .9s;
 
+  ul li a span {
+    background: var(--bg-secondary);
+  }
+
   &.hide {
     left: -67px;
   }
+}
+
+.fp-bg {
+  background: var(--mask-bg-color);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  transition: background .3s;
+}
+
+.content {
+  z-index: 1;
+  position: relative;
 }
